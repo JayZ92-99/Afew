@@ -1,1 +1,4 @@
-#Vallence and Arousal detection on AFFEW dataset.
+# Acted Facial Expressions In The Wild.
+Repository for AFEW challenge.
+
+
