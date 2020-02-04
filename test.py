@@ -15,9 +15,6 @@ from pandas import concat
 from keras.models import load_model
 
 
-
-
-
 def gru_model(filename,audio_data,face_data,video_data):
 
 	x_val_audio=np.array(audio_data)
@@ -25,42 +22,18 @@ def gru_model(filename,audio_data,face_data,video_data):
 	x_val_video=np.array(video_data)
 	print("shapes")
 	print(x_val_audio.shape,x_val_face.shape,x_val_video.shape)
-	model=load_model("/home/ubuntu/Desktop/Sowmya/AffWild2/feat_new/model_lstm_16_30.h5")
+	model=load_model("/home/ubuntu/Desktop/Sowmya/AffWild2/feat_new/affew_model.h5")
 	predicted_output = model.predict([x_val_video,x_val_face,x_val_audio])
 	#print(predicted_output.shape)
 	
-	'''if(len(x_val)%100!=0):
-		count=0
-		while(len(x_val)%100!=0):
-				rem=1
-				v_add= np.zeros((rem,15,2048))
-				x_val=np.concatenate((x_val, v_add), axis=0)
-				count+=1
-
-		predicted_output = model.predict([x_val_video,x_val_face,x_val_audio],batch_size=100)
-
-		#print("count",count)
-		print("before pred",predicted_output.shape)
-		#predicted_output=predicted_output[:-count,:]
-
-		
-
-	else:
-		print("inside else")
-		predicted_output = model.predict([x_val_video,x_val_face,x_val_audio],batch_size=100)
-
-		print(predicted_output.shape)'''
 	text_file_gen(predicted_output,filename)
-
-
-
 
 def text_file_gen(predicted_output,filename):
 
 	data = predicted_output
 
 	print(filename)
-	filename="./gru3_text_files/"+str(filename)+".txt"
+	filename="./gru_text_files/"+str(filename)+".txt"
 	print(filename)
 
 	# Write the array to disk
@@ -87,11 +60,6 @@ def text_file_gen(predicted_output,filename):
 				data_slice=np.vstack([pre_data,d_slice])
 			np.savetxt(outfile, data_slice, fmt='%-7.20f')
 	
-	
-
-
-
-
 
 def desplitting(data1,data2):
 	append1=data1[10:, :]
@@ -99,24 +67,19 @@ def desplitting(data1,data2):
 	avg_res=np.mean( np.array([ append1, append2 ]), axis=0 )
 	return(avg_res)
 
+x_val_audio =x_val_audio = np.load('/new_test_data.npy', allow_pickle=True)
+x_val_video = np.load('/test_data_video.npy', allow_pickle=True)
+x_val_face=np.load('/test_feat_face.npy', allow_pickle=True)
 
 
-x_val_audio =x_val_audio = np.load('/home/ubuntu/Desktop/Sowmya/AffWild2/new_test_data.npy', allow_pickle=True)
-x_val_video = np.load('/home/ubuntu/Desktop/Sowmya/AffWild2/feat_new/test_data_video.npy', allow_pickle=True)
-x_val_face=np.load('/home/ubuntu/Desktop/Sowmya/AffWild2/feat_new/test_feat_face.npy', allow_pickle=True)
-
-
-
-
-for i in range(len(x_val_audio)):
-	#print("inside first loop")
-	for j in range(len(x_val_face)):
-		#print("inside first loop")
-		for k in range(len(x_val_video)):
-			if(x_val_audio[i][0]==x_val_face[j][0][:-4]==x_val_video[k][0]):
-				filename=np.array(x_val_audio[i][0])
-				#print("filename",filename)
-				audio_data=np.array(x_val_audio[i][1])
+if __name__ == '__main__':
+	for i in range(len(x_val_audio)):
+		for j in range(len(x_val_face)):
+			for k in range(len(x_val_video)):
+				if(x_val_audio[i][0]==x_val_face[j][0][:-4]==x_val_video[k][0]):
+					filename=np.array(x_val_audio[i][0])
+					#print("filename",filename)
+					audio_data=np.array(x_val_audio[i][1])
 				face_data=np.array(x_val_face[j][1])	
 				video_data=np.array(x_val_video[k][1])
 				gru_model(filename,audio_data,face_data,video_data)
