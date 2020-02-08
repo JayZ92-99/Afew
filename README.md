@@ -1,4 +1,4 @@
-# Acted Facial Expressions In The Wild.
+# FG-2020 Competition: Affective Behavior Analysis in-the-wild (ABAW)
 Continuous affect prediction in the wild is a very
 interesting problem and is challenging as continuous prediction
 involves heavy computation. We make an attempt
